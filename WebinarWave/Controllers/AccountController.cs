@@ -61,7 +61,6 @@ namespace WebinarWave.Controllers
             });
             db.SaveChanges();
             GetIdentity(dto.Username, dto.Password);
-            return Redirect("/token");
 
         }
 
