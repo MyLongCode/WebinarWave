@@ -4,12 +4,18 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using WebinarWave.Controllers.User;
+using WebinarWave.Data;
 using WebinarWave.Models;
 
 namespace WebinarWave.Controllers
 {
     public class AccountController : Controller
     {
+        public ApplicationDbContext db;
+        public AccountController(ApplicationDbContext db)
+        {
+            this.db = db;
+        }
 
         [HttpPost("/token")]
         public IActionResult Token(GetUserTokenRequest dto)
@@ -43,17 +49,30 @@ namespace WebinarWave.Controllers
         [Route("/register")]
         public IActionResult RegisterUser(UserRegisterRequest dto)
         {
-            // ADD CREATE USER
+            var user = db.Users.FirstOrDefault(t => t.Username == dto.Username);
+            if (user != null)
+            {
+                return BadRequest("user with this username is already registration");
+            }
+            db.Users.Add(new Models.User
+            {
+                Username = dto.Username,
+                Password = dto.Password,
+            });
+            db.SaveChanges();
+            GetIdentity(dto.Username, dto.Password);
+            return Redirect("/token");
+
         }
 
         private ClaimsIdentity GetIdentity(string username, string password)
         {
-            if (_userLogicManager.CheckUserPassword(username, password).Result != false)
+            var user = db.Users.FirstOrDefault(t => t.Username == username && t.Password == password);
+            if (user != null)
             {
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, username),
-                    //new Claim(ClaimsIdentity.DefaultRoleClaimType, person.Role)
                 };
                 ClaimsIdentity claimsIdentity =
                 new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
