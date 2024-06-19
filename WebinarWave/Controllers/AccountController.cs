@@ -18,12 +18,12 @@ namespace WebinarWave.Controllers
         }
 
         [HttpPost("/token")]
-        public IActionResult Token([FromBody]string username, string password)
+        public IActionResult Token([FromBody] GetUserTokenRequest dto)
         {
-            var identity = GetIdentity(username, password);
+            var identity = GetIdentity(dto.Username, dto.Password);
             if (identity == null)
             {
-                return BadRequest(new { errorText = username });
+                return BadRequest(new { errorText = dto.Username });
             }
 
             var now = DateTime.UtcNow;
