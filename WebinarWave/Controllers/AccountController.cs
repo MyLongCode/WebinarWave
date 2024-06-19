@@ -18,12 +18,12 @@ namespace WebinarWave.Controllers
         }
 
         [HttpPost("/token")]
-        public IActionResult Token(GetUserTokenRequest dto)
+        public IActionResult Token([FromBody]string username, string password)
         {
-            var identity = GetIdentity(dto.Username, dto.Username);
+            var identity = GetIdentity(username, password);
             if (identity == null)
             {
-                return BadRequest(new { errorText = "Invalid username or password." });
+                return BadRequest(new { errorText = username });
             }
 
             var now = DateTime.UtcNow;
@@ -61,7 +61,13 @@ namespace WebinarWave.Controllers
             });
             db.SaveChanges();
             GetIdentity(dto.Username, dto.Password);
-
+            return Ok("user register");
+        }
+        [HttpGet]
+        [Route("/register")]
+        public IActionResult RegisterUser()
+        {
+            return View("Register");
         }
 
         private ClaimsIdentity GetIdentity(string username, string password)
