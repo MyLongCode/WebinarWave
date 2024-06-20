@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebinarWave.Data;
 
 namespace WebinarWave.Controllers
@@ -12,7 +13,8 @@ namespace WebinarWave.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var messages = db.Messages.Include(u => u.User).ToList();
+            return View(messages);
         }
     }
 }

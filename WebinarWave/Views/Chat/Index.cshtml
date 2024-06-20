@@ -1,6 +1,7 @@
-﻿@{
-    Layout = null;
-}
+﻿
+@using WebinarWave.Models;
+@model IEnumerable<Message>;
+
 <!DOCTYPE html>
 <html>
 
@@ -28,12 +29,16 @@
         </button>
     </div>
     <div id="chatBox">
+        @foreach (var item in Model)
+    {
+                <p><strong>@item.User.Username</strong> @item.Text</p>
+    }
     </div>
     <script>
         let connection = new signalR.HubConnectionBuilder()
                                     .withUrl("/chatHub").build();
-        connection.on("ReceiveMessage", function (user, message) {
-            let encodedUser = $("<div />").text(user).html();
+        connection.on("ReceiveMessage", function (username, message) {
+            let encodedUser = $("<div />").text(username).html();
             let encodedMsg = $("<div />").text(message).html();
             $("#chatBox").append("<p><strong>" + encodedUser + "</strong>: " + encodedMsg + "</p>");
             console.log("Сообщение пришло");
