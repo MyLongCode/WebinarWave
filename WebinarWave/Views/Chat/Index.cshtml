@@ -32,10 +32,11 @@
     <script>
         let connection = new signalR.HubConnectionBuilder()
                                     .withUrl("/chatHub").build();
-        connection.on("ReceiveMessage", function (User, Message) {
+        connection.on("ReceiveMessage", function (user, message) {
             let encodedUser = $("<div />").text(user).html();
             let encodedMsg = $("<div />").text(message).html();
             $("#chatBox").append("<p><strong>" + encodedUser + "</strong>: " + encodedMsg + "</p>");
+            console.log("Сообщение пришло");
         });
 
         $("#send-btn").click(function () {
