@@ -20,8 +20,6 @@
 
 <body>
     <div>
-        <input id="username" placeholder="username" 
-               type="text" />
         <input id="message" placeholder="message"
                type="text" />
         <button id="send-btn">
@@ -45,10 +43,16 @@
         });
 
         $("#send-btn").click(function () {
-            let our_user = $("#username").val();
-            let Message = $("#message").val();
-            connection.invoke("Message", our_user, Message);
-            $("#message").val("").focus();
+            let our_user = localStorage.getItem("username");
+            if(our_user == null){
+                alert("Вы не авторизированы!");
+            }
+            else{
+                let Message = $("#message").val();
+                connection.invoke("Message", our_user, Message);
+                $("#message").val("").focus();
+            }
+            
         });
 
 

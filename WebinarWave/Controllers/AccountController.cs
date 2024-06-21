@@ -47,7 +47,7 @@ namespace WebinarWave.Controllers
 
         [HttpPost]
         [Route("/register")]
-        public IActionResult RegisterUser(UserRegisterRequest dto)
+        public IActionResult RegisterUser([FromBody]UserRegisterRequest dto)
         {
             var user = db.Users.FirstOrDefault(t => t.Username == dto.Username);
             if (user != null)
@@ -68,6 +68,12 @@ namespace WebinarWave.Controllers
         public IActionResult RegisterUser()
         {
             return View("Register");
+        }
+        [HttpGet]
+        [Route("/login")]
+        public IActionResult LoginUser()
+        {
+            return View("Login");
         }
 
         private ClaimsIdentity GetIdentity(string username, string password)
