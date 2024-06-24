@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Login Page</title>
+</head>
+<body>
+    <div id="createRoomForm">
+        <h3>create room form</h3>
+        <p>
+            <label>Input room name</label><br />
+            <input type="name" id="email" />
+        </p>
+        <input type="submit" id="createRoom" value="Login" />
+    </div>
+    <script>
+        var tokenKey = "accessToken";
+        document.getElementById("createRoom").addEventListener("click", async e => {
+            e.preventDefault();
+            // отправляет запрос и получаем ответ
+            const response = await fetch("/room/create", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    roomName: document.getElementById("name").value,
+                })
+            });
+
+            if (response.ok === true) {
+                const data = await response.json();
+                window.location.replace("https://localhost:7225/room/");
+            }
+            else{
+                console.log("Status: ", response.status);
+            }
+        });
+    </script>
+</body>
+</html>
