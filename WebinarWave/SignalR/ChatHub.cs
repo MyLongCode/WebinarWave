@@ -10,13 +10,14 @@ namespace WebinarWave.SignalR
         {
             this.db = db;
         }
-        public async Task Message(string username, string message)
+        public async Task Message(int roomId,string username, string message)
         {
             var user = db.Users.FirstOrDefault(u => u.Username == username);
             db.Messages.Add(new Models.Message
             {
                 User = user,
-                Text = message
+                Text = message,
+                RoomId = roomId
             });
             db.SaveChanges();
             await Clients.All.SendAsync("ReceiveMessage", username, message);
