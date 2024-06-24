@@ -29,18 +29,21 @@
     <div id="chatBox">
         @foreach (var item in Model.Messages)
         {
-                    <p><strong>@item.User.Username</strong> @item.Text</p>
+            <p><strong>@item.User.Username</strong> @item.Text</p>
         }
     </div>
     <script>
         let connection = new signalR.HubConnectionBuilder()
                                     .withUrl("/chatHub").build();
+        
         connection.on("ReceiveMessage", function (username, message) {
             let encodedUser = $("<div />").text(username).html();
             let encodedMsg = $("<div />").text(message).html();
             $("#chatBox").append("<p><strong>" + encodedUser + "</strong>: " + encodedMsg + "</p>");
             console.log("Сообщение пришло");
         });
+        
+        
 
         $("#send-btn").click(function () {
             let our_user = localStorage.getItem("username");
@@ -49,7 +52,7 @@
             }
             else{
                 let Message = $("#message").val();
-                connection.invoke("Message", @Model.Id, our_user, Message);
+                connection.invoke("SendMessage", "@Model.Name", our_user, Message);
                 $("#message").val("").focus();
             }
 
@@ -57,10 +60,12 @@
 
 
         connection.start().then(function () {
+            connection.invoke("JoinRoom", "@Model.Name");
             console.log("Connected!");
         }).catch(function (err) {
             console.error(err.toString());
         });
+        
     </script>
 </body>
 
