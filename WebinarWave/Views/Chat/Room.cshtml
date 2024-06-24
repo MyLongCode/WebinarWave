@@ -1,6 +1,6 @@
 ﻿
-@using WebinarWave.Models;
-@model IEnumerable<Message>;
+@using WebinarWave.ViewModels
+@model RoomViewModel;
 
 <!DOCTYPE html>
 <html>
@@ -27,10 +27,10 @@
         </button>
     </div>
     <div id="chatBox">
-        @foreach (var item in Model)
-    {
-                <p><strong>@item.User.Username</strong> @item.Text</p>
-    }
+        @foreach (var item in Model.Messages)
+        {
+                    <p><strong>@item.User.Username</strong> @item.Text</p>
+        }
     </div>
     <script>
         let connection = new signalR.HubConnectionBuilder()
@@ -49,10 +49,10 @@
             }
             else{
                 let Message = $("#message").val();
-                connection.invoke("Message", our_user, Message);
+                connection.invoke("Message", @Model.Id, our_user, Message);
                 $("#message").val("").focus();
             }
-            
+
         });
 
 

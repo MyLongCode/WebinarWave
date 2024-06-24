@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>join to chat Page</title>
+</head>
+<body>
+    <div id="createRoomForm">
+        <h3>join to chat</h3>
+        <p>
+            <label>Input room id</label><br />
+            <input type="text" id="name" />
+        </p>
+        <input type="submit" id="createRoom" value="Join" />
+    </div>
+    <script>
+        document.getElementById("createRoom").addEventListener("click", async e => {
+            e.preventDefault();
+            var roomId = document.getElementById("name").value;
+            window.location.replace("https://localhost:7225/room/" + roomId);
+
+        });
+    </script>
+</body>
+</html>

@@ -9,12 +9,11 @@
         <h3>create room form</h3>
         <p>
             <label>Input room name</label><br />
-            <input type="name" id="email" />
+            <input type="text" id="name" />
         </p>
-        <input type="submit" id="createRoom" value="Login" />
+        <input type="submit" id="createRoom" value="Create" />
     </div>
     <script>
-        var tokenKey = "accessToken";
         document.getElementById("createRoom").addEventListener("click", async e => {
             e.preventDefault();
             // отправляет запрос и получаем ответ
@@ -22,9 +21,11 @@
                 method: "POST",
                 headers: { "Accept": "application/json", "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    roomName: document.getElementById("name").value,
+                    Name: document.getElementById("name").value
                 })
+
             });
+            
 
             if (response.ok === true) {
                 const data = await response.json();

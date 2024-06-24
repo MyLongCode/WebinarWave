@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebinarWave.Controllers.Room;
 using WebinarWave.Data;
+using WebinarWave.ViewModels;
 
 namespace WebinarWave.Controllers
 {
@@ -13,11 +15,6 @@ namespace WebinarWave.Controllers
         {
             this.db = db;
         }
-        public IActionResult Index()
-        {
-            var messages = db.Messages.Include(u => u.User).ToList();
-            return View(messages);
-        }
 
         [Route("/room/create")]
         [HttpGet]
@@ -27,23 +24,36 @@ namespace WebinarWave.Controllers
         }
         [Route("/room/create")]
         [HttpPost]
-        public IActionResult Create(string roomName)
+        public IActionResult Create([FromBody]CreateRoomRequest dto)
         {
             var room = new Models.Room
             {
-                Name = roomName,
+                Name = dto.Name,
             };
             db.Rooms.Add(room);
             db.SaveChanges();
             return RedirectToAction("JoinRoom", room.Id);
 
         }
+        [Route("/room/join")]
+        [HttpGet]
+        public IActionResult Join()
+        {
+            return View();
+        }
         [Route("/room/{roomId}")]
         [HttpGet]
         public IActionResult JoinRoom(int roomId)
         {
-            var messages = db.Messages.Include(u => u.User).Select(m => m.RoomId == roomId).ToList();
-            return View(messages);
+            var room = db.Rooms.Find(roomId);
+            if (room == null) return BadRequest("room is not defined");
+            room.Messages = db.Messages.Include(u => u.User).Where(m => m.RoomId == roomId).ToArray();
+            return View("Room", new RoomViewModel
+            {
+                Messages = room.Messages,
+                Name = room.Name,
+                Id = roomId
+            });
         }
     }
 }
