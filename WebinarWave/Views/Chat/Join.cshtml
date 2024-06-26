@@ -8,7 +8,7 @@
     <div id="createRoomForm">
         <h3>join to chat</h3>
         <p>
-            <label>Input room id</label><br />
+            <label>Input room name</label><br />
             <input type="text" id="name" />
         </p>
         <input type="submit" id="createRoom" value="Join" />
@@ -16,8 +16,8 @@
     <script>
         document.getElementById("createRoom").addEventListener("click", async e => {
             e.preventDefault();
-            var roomId = document.getElementById("name").value;
-            window.location.replace("https://localhost:7225/room/" + roomId);
+            var roomName = document.getElementById("name").value;
+            window.location.replace("https://localhost:7225/room/" + roomName);
 
         });
     </script>

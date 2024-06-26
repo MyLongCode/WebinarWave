@@ -29,7 +29,8 @@
 
             if (response.ok === true) {
                 const data = await response.json();
-                window.location.replace("https://localhost:7225/room/");
+                var roomName = document.getElementById("name").value;
+                window.location.replace("https://localhost:7225/room/" + roomName);
             }
             else{
                 console.log("Status: ", response.status);

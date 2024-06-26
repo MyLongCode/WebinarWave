@@ -26,6 +26,8 @@ namespace WebinarWave.Controllers
         [HttpPost]
         public IActionResult Create([FromBody]CreateRoomRequest dto)
         {
+            var roomRepeat = db.Rooms.FirstOrDefault(r => r.Name == dto.Name);
+            if (roomRepeat != null) return BadRequest("Room with this name is already create");
             var room = new Models.Room
             {
                 Name = dto.Name,
@@ -41,18 +43,18 @@ namespace WebinarWave.Controllers
         {
             return View();
         }
-        [Route("/room/{roomId}")]
+        [Route("/room/{roomName}")]
         [HttpGet]
-        public IActionResult JoinRoom(int roomId)
+        public IActionResult JoinRoom(string roomName)
         {
-            var room = db.Rooms.Find(roomId);
+            var room = db.Rooms.FirstOrDefault(r => r.Name == roomName);
             if (room == null) return BadRequest("room is not defined");
-            room.Messages = db.Messages.Include(u => u.User).Where(m => m.RoomId == roomId).ToArray();
+            room.Messages = db.Messages.Include(u => u.User).Where(m => m.RoomId == room.Id).ToArray();
             return View("Room", new RoomViewModel
             {
                 Messages = room.Messages,
                 Name = room.Name,
-                Id = roomId
+                Id = room.Id
             });
         }
     }
