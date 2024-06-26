@@ -31,7 +31,14 @@ namespace WebinarWave.Controllers
             var room = new Models.Room
             {
                 Name = dto.Name,
+                Password = "",
+                IsPrivate = false,
             };
+            if (dto.Password != null)
+            {
+                room.IsPrivate = true;
+                room.Password = dto.Password;
+            }
             db.Rooms.Add(room);
             db.SaveChanges();
             return RedirectToAction("JoinRoom", room.Id);
@@ -49,6 +56,26 @@ namespace WebinarWave.Controllers
         {
             var room = db.Rooms.FirstOrDefault(r => r.Name == roomName);
             if (room == null) return BadRequest("room is not defined");
+            if (room.IsPrivate == true) 
+                return View("JoinWithPassword", new JoinWithPasswordViewModel
+                {
+                    Name = roomName,
+                });
+            room.Messages = db.Messages.Include(u => u.User).Where(m => m.RoomId == room.Id).ToArray();
+            return View("Room", new RoomViewModel
+            {
+                Messages = room.Messages,
+                Name = room.Name,
+                Id = room.Id
+            });
+        }
+        [Route("/room/{roomName}")]
+        [HttpPost]
+        public IActionResult JoinRoom([FromBody] JoinRoomRequest dto)
+        {
+            var room = db.Rooms.FirstOrDefault(r => r.Name == dto.Name);
+            if (room == null) return BadRequest("room is not defined");
+            if (room.Password != dto.Password) return BadRequest("Password uncorrect");
             room.Messages = db.Messages.Include(u => u.User).Where(m => m.RoomId == room.Id).ToArray();
             return View("Room", new RoomViewModel
             {
