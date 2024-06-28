@@ -25,7 +25,7 @@ namespace WebinarWave.Controllers
         public IActionResult Create([FromBody]CreateRoomRequest dto)
         {
             var roomRepeat = db.Rooms.FirstOrDefault(r => r.Name == dto.Name);
-            if (roomRepeat != null) return BadRequest("Room with this name is already create");
+            if (roomRepeat != null) return BadRequest();
             var room = new Models.Room
             {
                 Name = dto.Name,
@@ -39,7 +39,7 @@ namespace WebinarWave.Controllers
             }
             db.Rooms.Add(room);
             db.SaveChanges();
-            return RedirectToAction("JoinRoom", room.Id);
+            return Ok("room created");
 
         }
         [Route("/room/join")]
