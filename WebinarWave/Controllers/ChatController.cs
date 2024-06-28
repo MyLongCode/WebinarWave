@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿    using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebinarWave.Controllers.Room;
 using WebinarWave.Data;
@@ -34,7 +32,7 @@ namespace WebinarWave.Controllers
                 Password = "",
                 IsPrivate = false,
             };
-            if (dto.Password != null)
+            if (dto.Password != "")
             {
                 room.IsPrivate = true;
                 room.Password = dto.Password;
@@ -69,13 +67,13 @@ namespace WebinarWave.Controllers
                 Id = room.Id
             });
         }
-        [Route("/room/{roomName}")]
-        [HttpPost]
-        public IActionResult JoinRoom([FromBody] JoinRoomRequest dto)
+        [Route("/room/private/{roomName}")]
+        [HttpGet]
+        public IActionResult JoinRoom(string roomName, string password)
         {
-            var room = db.Rooms.FirstOrDefault(r => r.Name == dto.Name);
+            var room = db.Rooms.FirstOrDefault(r => r.Name == roomName);
             if (room == null) return BadRequest("room is not defined");
-            if (room.Password != dto.Password) return BadRequest("Password uncorrect");
+            if (room.Password != password) return BadRequest("Password uncorrect");
             room.Messages = db.Messages.Include(u => u.User).Where(m => m.RoomId == room.Id).ToArray();
             return View("Room", new RoomViewModel
             {
