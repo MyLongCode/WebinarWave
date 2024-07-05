@@ -27,6 +27,7 @@ namespace WebinarWave.SignalR
 
         public Task JoinRoom(string roomName)
         {
+
             return Groups.AddToGroupAsync(Context.ConnectionId, roomName);
         }
 
