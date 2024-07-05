@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using WebinarWave.ViewModels
+@model JoinToRoomsViewModel;
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -12,6 +14,14 @@
             <input type="text" id="name" />
         </p>
         <input type="submit" id="createRoom" value="Join" />
+    </div>
+    <br />
+    <h3>Not privated rooms:</h3>
+     <div id="chatBox">
+        @foreach (var item in Model.Rooms)
+        {
+                <p>@item.Name</p>
+        }
     </div>
     <script>
         document.getElementById("createRoom").addEventListener("click", async e => {

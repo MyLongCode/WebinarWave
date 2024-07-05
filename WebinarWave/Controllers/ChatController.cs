@@ -46,7 +46,11 @@ namespace WebinarWave.Controllers
         [HttpGet]
         public IActionResult Join()
         {
-            return View();
+            var rooms = db.Rooms.Where(r => r.IsPrivate == false).ToArray();
+            return View(new JoinToRoomsViewModel
+            {
+                Rooms = rooms,
+            });
         }
         [Route("/room/{roomName}")]
         [HttpGet]
