@@ -1,7 +1,27 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
+<head>
+    <meta charset="utf-8" />
+    <title>
+        Chat
+    </title>
+    <script src=
+"https://code.jquery.com/jquery-3.6.0.min.js">
+    </script>
+    <script src=
+"https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.13/signalr.min.js">
+    </script>
+</head>
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4" id="welcome">Welcome</h1>
 </div>
+<script>
+    let user = localStorage.getItem("username");
+    if (user != null){
+        $("#welcome").append(", <strong>" + user + "</strong>");
+    }
+    
+
+
+</script>
