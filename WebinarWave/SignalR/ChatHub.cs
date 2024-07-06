@@ -8,6 +8,7 @@ namespace WebinarWave.SignalR
     public class ChatHub : Hub
     {
         public ApplicationDbContext db;
+        public static Dictionary<string, int> RoomsUsers = new Dictionary<string, int>();
         public ChatHub(ApplicationDbContext db)
         {
             this.db = db;
@@ -25,14 +26,22 @@ namespace WebinarWave.SignalR
             await Clients.Group(roomName).SendAsync("ReceiveMessage", username, message);
         }
 
+        public static int EditUsers(string roomName, int userCount)
+        {
+            if (RoomsUsers.ContainsKey(roomName)) RoomsUsers[roomName] += userCount;
+            else RoomsUsers[roomName] = 1;
+            return RoomsUsers[roomName];
+        }
+
         public Task JoinRoom(string roomName)
         {
-
+            Clients.Group(roomName).SendAsync("UserJoinOrLeave", EditUsers(roomName, 1));
             return Groups.AddToGroupAsync(Context.ConnectionId, roomName);
         }
 
         public Task LeaveRoom(string roomName)
         {
+            Clients.Group(roomName).SendAsync("UserJoinOrLeave", EditUsers(roomName, -1));
             return Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
         }
     }

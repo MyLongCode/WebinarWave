@@ -20,6 +20,7 @@
 
 <body>
     <h1>@Model.Name</h1>
+    <h2>Users in chat: <p id="countUsers"></p></h2>
     <div>
         <input id="message" placeholder="message"
                type="text" />
@@ -42,6 +43,11 @@
             let encodedMsg = $("<div />").text(message).html();
             $("#chatBox").append("<p><strong>" + encodedUser + "</strong>: " + encodedMsg + "</p>");
             console.log("Сообщение пришло");
+        });
+        connection.on("UserJoinOrLeave", function (count) {
+            let encodedCount = $("<div />").text(count).html();
+            $("#countUsers").append("<strong>" + encodedCount + "</strong>");
+            console.log("Количество пользователей изменено ");
         });
         
         
