@@ -30,8 +30,8 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav flex-grow-3">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="LoginUser">Login</a>
+                        <li class="nav-item" id="ProfileOrLogin">
+                           
                         </li>
                     </ul>
                 </div>
@@ -54,8 +54,13 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-        var localUser = localStorage.getItem("username");
-        $("#username").append("<p><strong>" + localUser + "</strong></p>");
+
+        let localUser = localStorage.getItem("username");
+        if (localUser == null){
+            $("#ProfileOrLogin").append("<a class=\"nav-link text-dark\" href=\"/login\">Login</a>");
+        }
+
+
     </script>
 </body>
 
